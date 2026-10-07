@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (driven by next-themes). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Wide but short screens (e.g. laptops with display scaling): tighten the hero. */
+@custom-variant short (@media (min-width: 1024px) and (max-height: 720px));
+
+/* Phones held sideways: very little height. */
+@custom-variant phone-landscape (@media (orientation: landscape) and (max-height: 500px));
+
+@theme {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif; /* body, menus, buttons */
+  --font-display: var(--font-bricolage), var(--font-geist), ui-sans-serif, system-ui, sans-serif; /* headings */
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif; /* highlighted words */
+  --font-brand: var(--font-playfair), ui-serif, Georgia, serif; /* name wordmark */
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* labels, dates */
+
+  /* Surfaces — light theme: "Ivory & Sapphire" */
+  --color-cream: #f7f4ec; /* pearl ivory background */
+  --color-cream-soft: #fdfbf6; /* lighter ivory for the top fade and panels */
+  --color-gold: #b08d57; /* champagne gold hairlines and details */
+  --color-ink-950: #090d16;
+  --color-ink-900: #0f172a;
+  --color-ink-850: #131b2e;
+
+  /* Accent: sapphire (light theme). Dark theme overrides these below. */
+  --color-accent: #1d4ed8;
+  --color-accent-hover: #1e3a8a;
+  --color-accent-soft: #93c5fd; /* text accent on dark backgrounds */
+  --color-accent-strong: #1e40af; /* text accent on light backgrounds */
+
+  /* Brand trio for gradients and glows. */
+  --color-brand-1: #2563eb; /* royal blue */
+  --color-brand-2: #0ea5e9; /* sky */
+  --color-brand-3: #c9a24a; /* champagne gold */
+
+  /* Highlighted words (serif italic): navy → royal → ocean on ivory. */
+  --color-text-1: #1e3a8a;
+  --color-text-2: #2563eb;
+  --color-text-3: #0369a1;
+
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -14px, 0); }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold
+    transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+/* Dark theme palette: emerald / teal on deep green-slate. */
+.dark {
+  --color-ink-950: #06110f;
+  --color-ink-900: #0c1c19;
+  --color-ink-850: #10241f;
+
+  --color-accent: #10b981; /* emerald-500 */
+  --color-accent-hover: #34d399;
+  --color-accent-soft: #5eead4; /* teal-300, AA on the dark background */
+
+  --color-brand-1: #34d399; /* emerald */
+  --color-brand-2: #2dd4bf; /* teal */
+  --color-brand-3: #22d3ee; /* cyan */
+
+  --color-text-1: #34d399;
+  --color-text-2: #2dd4bf;
+  --color-text-3: #22d3ee;
+}
+
+@layer base {
+  /* Vertical scrolling only: nothing (glows, 3D effects, animations) can make the page slide
+     sideways on phones. `clip` (unlike `hidden`) doesn't create a scroll container. */
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+  }
+  body {
+    position: relative;
+    width: 100%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-cream text-[#0f1b3d] antialiased dark:bg-ink-950 dark:text-[#e6f4f1];
+    /* Light theme: ivory with a faint sapphire glow (left) and champagne glow (right) at the top. */
+    background-image:
+      radial-gradient(60rem 28rem at 10% -6rem, rgb(37 99 235 / 0.07), transparent 70%),
+      radial-gradient(50rem 26rem at 95% -4rem, rgb(201 162 74 / 0.10), transparent 70%),
+      linear-gradient(to bottom, var(--color-cream-soft), var(--color-cream) 16rem);
+    background-repeat: no-repeat;
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+  }
+  .dark body {
+    background-image: none;
+  }
+
+  /* Light sheen on 3D tilt cards. */
+  :root {
+    --tilt-sheen: rgb(37 99 235 / 0.09);
+  }
+  .dark {
+    --tilt-sheen: rgb(255 255 255 / 0.08);
+  }
+
+  ::selection {
+    @apply bg-accent text-white dark:text-ink-950;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent dark:outline-accent-soft;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 2xl:max-w-7xl;
+  }
+
+  .glass {
+    /* Light: frosted white with a champagne hairline and a soft sapphire-tinted lift. */
+    @apply border border-gold/20 bg-white/70 backdrop-blur-xl
+      shadow-[0_1px_2px_rgb(15_27_61/0.04),0_12px_32px_-16px_rgb(30_58_138/0.18)]
+      dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none;
+  }
+
+  .text-accent-adaptive {
+    @apply text-accent-strong dark:text-accent-soft;
+  }
+
+  .text-muted {
+    @apply text-slate-600 dark:text-slate-400;
+  }
+
+  .btn-primary {
+    /* Emerald is bright, so dark mode uses dark text on the button for contrast. */
+    @apply btn bg-accent text-white dark:text-ink-950
+      hover:-translate-y-0.5 hover:bg-accent-hover active:translate-y-px;
+    /* 3D: glossy top light, a darker bottom edge, and a coloured drop shadow. */
+    background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.2), transparent 55%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      inset 0 -2px 0 rgb(0 0 0 / 0.18),
+      0 10px 24px -8px color-mix(in oklab, var(--color-accent) 65%, transparent);
+  }
+  .btn-primary:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      inset 0 -2px 0 rgb(0 0 0 / 0.18),
+      0 16px 32px -10px color-mix(in oklab, var(--color-accent) 75%, transparent);
+  }
+  .btn-primary:active {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.2),
+      inset 0 2px 4px rgb(0 0 0 / 0.2),
+      0 4px 10px -6px color-mix(in oklab, var(--color-accent) 70%, transparent);
+  }
+  .btn-outline {
+    @apply btn border border-slate-300 text-slate-900 hover:-translate-y-0.5 hover:border-slate-900
+      dark:border-white/20 dark:text-white dark:hover:border-white/60;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full border border-gold/25 bg-white/70 px-2.5 py-0.5
+      text-xs font-medium text-slate-700
+      dark:border-white/10 dark:bg-white/5 dark:text-slate-300;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.12) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .text-gradient {
+    /* Highlighted words: elegant serif italic in the brand gradient. */
+    @apply bg-gradient-to-r from-text-1 via-text-2 to-text-3 bg-clip-text font-serif font-normal tracking-normal text-transparent italic;
+    /* Room for the italic overhang so background-clip doesn't cut the last letter. */
+    padding-inline-end: 0.1em;
+    margin-inline-end: -0.1em;
+    /* The serif has a smaller x-height than the bold headings; scale it up to match. */
+    font-size: 1.1em;
+    line-height: 1;
+  }
+}

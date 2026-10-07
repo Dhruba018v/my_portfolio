@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm install next@latest react@latest react-dom@latest framer-motion next-themes react-icons clsx 2>&1)",
+      "PowerShell(npm install -D typescript @types/react @types/react-dom @types/node tailwindcss @tailwindcss/postcss postcss 2>&1)",
+      "PowerShell(npm ls --depth=0)",
+      "PowerShell($edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; Test-Path $edge; $s = \"C:\\\\Users\\\\ABHIJI~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-abhijitpc-Desktop-Portfolio\\\\433b241b-3588-4f2b-9440-0fb76fabb3d9\\\\scratchpad\"; \\(Invoke-WebRequest http://localhost:3123 -UseBasicParsing\\).StatusCode; & $edge --headless=new --disable-gpu --hide-scrollbars --window-size=1440,6000 --virtual-time-budget=8000 --screenshot=\"$s\\\\desk.png\" http://localhost:3123 2>$null; & $edge --headless=new --disable-gpu --hide-scrollbars --window-size=390,1800 --virtual-time-budget=8000 --screenshot=\"$s\\\\mobile.png\" http://localhost:3123 2>$null; Start-Sleep 2; Get-ChildItem $s)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 3123 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -Confirm:$false }; npm run build 2>&1 | Select-String -Pattern \"error|Error|✓ Compiled|Finished TypeScript\" | Out-String)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 3123 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -Confirm:$false }; \"stopped\")",
+      "PowerShell(Get-TimeZone | Select-Object Id, DisplayName; Get-Date -Format \"yyyy-MM-dd HH:mm zzz\"; \\(Get-WinHomeLocation\\).HomeLocation)"
+    ]
+  }
+}
